@@ -1,6 +1,24 @@
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<a class="brand" href="#">Beat Feed</a>
+			<div class="nav-collapse">
+				<ul class="nav pull-right">
+					<%if user_signed_in?%>
+						<li><%= link_to "Logout", destroy_user_session_path, :method => :delete, :id => "logout" %></li>
+					<%else%>
+						<li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
+					<%end%>
+				</ul>
+			</div><!-- /.nav-collapse -->
+		</div><!-- /.container -->
+	</div><!-- /.navbar-inner -->
+</div><!-- /.navbar -->
+
+<div class="container">
+
 <%if user_signed_in?%>
-	<%= link_to "Logout", destroy_user_session_path, :method => :delete, :id => "logout" %>
-	
+
 	<div class="beat_feed">
 		<p>Loading beats...</p>
   </div>
@@ -8,7 +26,7 @@
 	<script type="text/javascript">
 		function fetchBeats(){
 			// set URL of JSON data from Facebook Graph API
-			var graphUrl = 'https://graph.facebook.com/256498551096921/feed';
+			var graphUrl = 'https://graph.facebook.com/233053366765557/feed';
 			var accessToken = '<%=@access_token%>';
 			var limit = '100';
 			var url =  graphUrl + '?access_token=' + accessToken + '&limit=' + limit + '&callback=?';
@@ -36,17 +54,22 @@
 						html += '<p>' + beatSource + '</p>';
 						
 						if (json.data[i].caption == 'www50.zippyshare.com'){
-							var zippyFile = beatLink.substring(30, 38);
 							console.log("We've got a zippy!");
+							
+							var zippyFile = beatLink.substring(30, 38);
 							//html += '<embed src="' + beatSource + '" width="100%" height="80"></embed>';
 							
 							html += '<embed src="http://www50.zippyshare.com/swf/player_local.swf?file=' + zippyFile + '&server=50&baseurl=http://www.zippyshare.com/api/&flashid=null&autostart=false&availablequality=both&bordercolor=#CCCCCC&forecolor=#000000&backcolor=#F2F2F2&darkcolor=#000000&lightcolor=#FF6600" width="100%" height="80"></embed>';
 						}
 						else if (json.data[i].caption == 'www.youtube.com'){
+							console.log("We've got a youtube!");
+							
 							var ytFile = beatLink.substring(31, 42);
 							html += '<iframe width="420" height="35" src="http://www.youtube.com/embed/' + ytFile + '?enablejsapi=1" frameborder="0" allowfullscreen></iframe>';
 						}
 						else if (json.data[i].caption == 'soundcloud.com'){
+							console.log("We've got a soundcloud!");
+							
 							//var scFile = beatLink.substring();
 							
 							//html += '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="' + beatSource + '"></iframe>';
@@ -69,5 +92,14 @@
 		});
 	</script>
 <%else%>
-	<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
+
+	<div class="hero-unit">
+		<h1>This is a Facebook app!</h1>
+		<p>So what are you waiting for?</p>
+		<p>
+			<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook), :class=>"btn btn-primary btn-large" %>
+		</p>
+	</div>
 <%end%>
+
+</div> <!-- /container -->
