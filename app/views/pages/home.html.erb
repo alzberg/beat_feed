@@ -1,6 +1,73 @@
 <%if user_signed_in?%>
 	<%= link_to "Logout", destroy_user_session_path, :method => :delete, :id => "logout" %>
-	!!!<%=@access_token%>!!!
+	
+	<div class="beat_feed">
+		<p>Loading beats...</p>
+  </div>
+	
+	<script type="text/javascript">
+		function fetchBeats(){
+			// set URL of JSON data from Facebook Graph API
+			var graphUrl = 'https://graph.facebook.com/256498551096921/feed';
+			var accessToken = '<%=@access_token%>';
+			var limit = '100';
+			var url =  graphUrl + '?access_token=' + accessToken + '&limit=' + limit + '&callback=?';
+			
+			$.getJSON(url,function(json){
+				var html = "<ol>";
+				console.log(json.data.length);
+				
+				for( i=0; i < json.data.length; i++){
+					console.log("type of "+ i + " = " + json.data[i].type);
+					
+					if (json.data[i].type == 'video'){
+						var beatName = json.data[i].name;
+						var beatLink = json.data[i].link;
+						
+						html += '<li><p><a href="' + beatLink + '">' + beatName + '</a></p>';
+						
+						var beatSource = json.data[i].source;
+						var r = /\\u([\d\w]{4})/gi;
+						beatSource = beatSource.replace(r, function (match, grp) {
+							return String.fromCharCode(parseInt(grp, 16));
+						});
+						beatSource = unescape(beatSource);
+						
+						html += '<p>' + beatSource + '</p>';
+						
+						if (json.data[i].caption == 'www50.zippyshare.com'){
+							var zippyFile = beatLink.substring(30, 38);
+							console.log("We've got a zippy!");
+							//html += '<embed src="' + beatSource + '" width="100%" height="80"></embed>';
+							
+							html += '<embed src="http://www50.zippyshare.com/swf/player_local.swf?file=' + zippyFile + '&server=50&baseurl=http://www.zippyshare.com/api/&flashid=null&autostart=false&availablequality=both&bordercolor=#CCCCCC&forecolor=#000000&backcolor=#F2F2F2&darkcolor=#000000&lightcolor=#FF6600" width="100%" height="80"></embed>';
+						}
+						else if (json.data[i].caption == 'www.youtube.com'){
+							var ytFile = beatLink.substring(31, 42);
+							html += '<iframe width="420" height="35" src="http://www.youtube.com/embed/' + ytFile + '?enablejsapi=1" frameborder="0" allowfullscreen></iframe>';
+						}
+						else if (json.data[i].caption == 'soundcloud.com'){
+							//var scFile = beatLink.substring();
+							
+							//html += '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="' + beatSource + '"></iframe>';
+						}
+						
+						html += '</li>';
+					}
+				}
+				html += "</ol>";
+				
+				// animation once fetched
+				$('.beat_feed').animate({opacity:0}, 500, function(){
+					$('.beat_feed').html(html);
+				});
+				$('.beat_feed').animate({opacity:1}, 500);
+			});
+		};
+		$(document).ready(function(){
+			fetchBeats();
+		});
+	</script>
 <%else%>
 	<%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
 <%end%>
