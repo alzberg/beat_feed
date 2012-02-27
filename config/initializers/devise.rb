@@ -210,9 +210,9 @@ Devise.setup do |config|
   require "omniauth-facebook"
   if Rails.env.development?
     config.omniauth :facebook, '199469820160350', 'ce65e0ae28801d9905672e389783c5b6',
-      {:scope => 'email,user_groups', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      {:scope => 'read_stream,email,user_groups', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
   else
     config.omniauth :facebook, '358670077489145', 'b9697e254c6026a4fe7d805954ef3d67',
-      {:scope => 'email,user_groups', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+      {:scope => 'read_stream,email,user_groups', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
   end
 end
