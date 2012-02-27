@@ -28,3 +28,6 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'ruby-debug'
 
+gem 'devise'
+gem 'omniauth-facebook'
+gem 'fbgraph'
