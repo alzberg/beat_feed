@@ -26,7 +26,13 @@
 	<script type="text/javascript">
 		function fetchBeats(){
 			// set URL of JSON data from Facebook Graph API
-			var graphUrl = 'https://graph.facebook.com/233053366765557/feed';
+			
+			// WF Beat Exchange
+			// var graphUrl = 'https://graph.facebook.com/233053366765557/feed';
+			
+			// Test Beat Exchange
+			var graphUrl = 'https://graph.facebook.com/256498551096921/feed';
+			
 			var accessToken = '<%=@access_token%>';
 			var limit = '100';
 			var url =  graphUrl + '?access_token=' + accessToken + '&limit=' + limit + '&callback=?';
